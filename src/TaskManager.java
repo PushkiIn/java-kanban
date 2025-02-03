@@ -42,8 +42,9 @@ public class TaskManager {
                 tasks.remove(id);
                 ((Epic)tasks.get(epicId)).removeSubTaskId(id);
                 updateEpicStatus((Epic) tasks.get(epicId));
+            } else {
+                tasks.remove(id);
             }
-            tasks.remove(id);
         }
     }
 
@@ -65,9 +66,11 @@ public class TaskManager {
     }
 
     public void updateTaskStatus(Task task, Status newStatus) {
+        if (task == null) {
+            return;
+        }
         if (task instanceof Epic) {
-            Epic epic = (Epic) task;
-            updateEpicStatus(epic);
+            updateEpicStatus((Epic) task);
         } else if (task != null) {
             if (task instanceof SubTask) {
                 int epicId = ((SubTask) task).getEpicId();
@@ -91,6 +94,7 @@ public class TaskManager {
 
             boolean allNEW = true;
             boolean allDONE = true;
+
             for (SubTask subTask : subTasksFromEpic) {
                 if(subTask.getStatus() != Status.NEW) {
                     allNEW = false;
