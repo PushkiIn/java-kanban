@@ -1,5 +1,6 @@
 package model;
 
+import enums.Status;
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -25,6 +26,11 @@ public class Epic extends Task {
         if (subTaskIds.contains(subTaskId)) {
             subTaskIds.remove(Integer.valueOf(subTaskId));
         }
+    }
+
+    public void removeAllSubTasks() {
+        subTaskIds.clear();
+        this.setStatus(Status.NEW);
     }
 
     @Override
