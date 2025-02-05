@@ -22,6 +22,10 @@ public class Main {
         Epic epic1 = new Epic("Эпик №1", "Что-то надо сделать");
         taskManager.createEpic(epic1);
         System.out.println("Создан эпик: " + epic1);
+        epic1.setName("Абсолютно другое имя");
+        taskManager.updateTask(epic1);
+
+        System.out.println(taskManager.getEpicsById(epic1.getId()));
 
         SubTask subTask1 = new SubTask("Подзадача №1", "Первая подзадача для первого эпика", epic1.getId());
         SubTask subTask2 = new SubTask("Подзадача №2", "Вторая подзадача для первого эпика", Status.DONE, epic1.getId());
@@ -67,5 +71,6 @@ public class Main {
         taskManager.deleteAllEpics();
         System.out.println("После удаления всех эпиков':");
         System.out.println("Все эпики: " + taskManager.getAllEpics());
+
     }
 }
