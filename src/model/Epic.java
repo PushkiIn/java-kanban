@@ -30,7 +30,6 @@ public class Epic extends Task {
 
     public void removeAllSubTasks() {
         subTaskIds.clear();
-        this.setStatus(Status.NEW);
     }
 
     @Override

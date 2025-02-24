@@ -1,10 +1,10 @@
 import enums.Status;
-import manager.TaskManager;
+import manager.InMemoryTaskManager;
 import model.*;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
         Task task1 = new Task("Задача №1", "Что-то делаем");
         taskManager.createTask(task1);
