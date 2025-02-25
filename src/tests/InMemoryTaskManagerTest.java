@@ -26,6 +26,7 @@ public class InMemoryTaskManagerTest {
         taskManager.createTask(task);
         assertEquals(1, taskManager.getAllTasks().size());
         assertEquals(task, taskManager.getTaskById(1));
+        assertEquals(1, task.getId());
     }
 
     @Test
