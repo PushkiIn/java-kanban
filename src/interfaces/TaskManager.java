@@ -22,7 +22,7 @@ public interface TaskManager {
 
     Task getTaskById(int id);
 
-    Task getEpicsById(int id);
+    Epic getEpicById(int id);
 
     SubTask getSubTaskById(int id);
 
@@ -34,11 +34,13 @@ public interface TaskManager {
 
     void deleteTask(int id);
 
+    void deleteEpic(int id);
+
+    void deleteSubTask(int id);
+
     void updateTask(Task updatedTask);
 
     ArrayList<SubTask> getSubTasksOfEpic(int epicId);
 
     void updateEpicStatus(Epic epic);
-
-    List<Task> getHistory();
 }
