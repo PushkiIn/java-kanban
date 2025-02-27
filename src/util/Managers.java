@@ -1,6 +1,6 @@
 package util;
 
-import interfaces.TaskManager;
+import manager.TaskManager;
 import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 
