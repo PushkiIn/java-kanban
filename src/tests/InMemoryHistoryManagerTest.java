@@ -1,6 +1,6 @@
 package tests;
 
-import interfaces.HistoryManager;
+import manager.HistoryManager;
 import manager.InMemoryHistoryManager;
 import model.Task;
 
