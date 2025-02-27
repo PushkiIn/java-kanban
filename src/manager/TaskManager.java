@@ -1,4 +1,4 @@
-package interfaces;
+package manager;
 
 import model.Epic;
 import model.SubTask;
@@ -43,4 +43,6 @@ public interface TaskManager {
     ArrayList<SubTask> getSubTasksOfEpic(int epicId);
 
     void updateEpicStatus(Epic epic);
+
+    public List<Task> getHistory();
 }
