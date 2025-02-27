@@ -1,13 +1,12 @@
 package manager;
 
-import interfaces.HistoryManager;
-import interfaces.TaskManager;
 import enums.Status;
 import model.*;
 import util.Managers;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Task> tasks;
@@ -67,27 +66,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        if(historyManager.getHistory().size() == 10) {
-            historyManager.getHistory().removeFirst();
-        }
         historyManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
-        if(historyManager.getHistory().size() == 10) {
-            historyManager.getHistory().removeFirst();
-        }
         historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        if(historyManager.getHistory().size() == 10) {
-            historyManager.getHistory().removeFirst();
-        }
         historyManager.add(subTasks.get(id));
         return subTasks.get(id);
     }
@@ -198,5 +188,10 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.setStatus(Status.IN_PROGRESS);
             }
         }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 }
