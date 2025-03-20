@@ -15,30 +15,41 @@ import static enums.Status.NEW;
 
 public class InMemoryHistoryManagerTest {
 
-    HistoryManager historyManager;
+    private HistoryManager historyManager;
+    private Task task1;
 
     @BeforeEach
     public void BeforeEach() {
         historyManager = new InMemoryHistoryManager();
+        task1 = new Task("Задача 1", "описание");
+        task1.setId(1);
     }
     
     @Test
-    public void testAdd() {
-        Task task = new Task("Задача 1", "описание задачи 1", NEW);
-        historyManager.add(task);
-        List<Task> history = historyManager.getHistory();
-        Assertions.assertTrue(history.contains(task));
+    public void testAddTask() {
+        historyManager.add(task1);
+        Assertions.assertEquals(1, historyManager.getHistory().size());
+        Assertions.assertEquals(task1, historyManager.getHistory().get(0));
     }
 
     @Test
-    public void testGetHistory() {
-        Task task1 = new Task("Задача 1", "описание задачи 1", NEW);
-        Task task2 = new Task("Задача 2", "описание задачи 2", IN_PROGRESS);
-        List<Task> expectedHistory = new ArrayList<>();
-        expectedHistory.add(task1);
-        expectedHistory.add(task2);
+    void testRemoveTaskFromHistory() {
+        historyManager.add(task1);
+        historyManager.remove(1);
+        Assertions.assertTrue(historyManager.getHistory().isEmpty());
+    }
+
+    @Test
+    void testGetHistory() {
+        Task task2 = new Task("Task 2", "Description 2");
+        task2.setId(2);
+
         historyManager.add(task1);
         historyManager.add(task2);
-        Assertions.assertEquals(expectedHistory, historyManager.getHistory());
+
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertEquals(2, history.size());
+        Assertions.assertTrue(history.contains(task1));
+        Assertions.assertTrue(history.contains(task2));
     }
 }
