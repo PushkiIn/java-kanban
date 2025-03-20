@@ -20,7 +20,7 @@ public class InMemoryHistoryManagerTest {
         task1 = new Task("Задача 1", "описание");
         task1.setId(1);
     }
-    
+
     @Test
     public void testAddTask() {
         historyManager.add(task1);
@@ -29,14 +29,14 @@ public class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void testRemoveTaskFromHistory() {
+    public void testRemoveTaskFromHistory() {
         historyManager.add(task1);
         historyManager.remove(1);
         Assertions.assertTrue(historyManager.getHistory().isEmpty());
     }
 
     @Test
-    void testGetHistory() {
+    public void testGetHistory() {
         Task task2 = new Task("Task 2", "Description 2");
         task2.setId(2);
 
