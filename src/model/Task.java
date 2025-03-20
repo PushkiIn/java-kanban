@@ -35,11 +35,12 @@ public class Task {
     public void setStatus(Status status) {
         this.status = status;
     }
+
     public Status getStatus() {
         return status;
     }
 
-    public void setName (String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
