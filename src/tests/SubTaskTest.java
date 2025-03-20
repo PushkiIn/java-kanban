@@ -1,7 +1,6 @@
 package tests;
 
 import model.SubTask;
-import model.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

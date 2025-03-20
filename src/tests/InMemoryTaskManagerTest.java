@@ -1,16 +1,17 @@
 package tests;
 
-import static enums.Status.*;
 import manager.InMemoryTaskManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+
+import static enums.Status.NEW;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class InMemoryTaskManagerTest {
     private InMemoryTaskManager taskManager;

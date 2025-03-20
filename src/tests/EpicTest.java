@@ -1,6 +1,5 @@
 package tests;
 
-import manager.InMemoryTaskManager;
 import model.Epic;
 import model.SubTask;
 import org.junit.jupiter.api.Assertions;
