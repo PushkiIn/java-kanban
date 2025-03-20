@@ -53,6 +53,7 @@ public class InMemoryTaskManagerTest {
         taskManager.createTask(task);
         taskManager.deleteTask(1);
         assertEquals(0, taskManager.getAllTasks().size());
+        assertNull(taskManager.getTaskById(1));
     }
 
     @Test
