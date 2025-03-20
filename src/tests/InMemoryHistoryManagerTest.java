@@ -4,14 +4,10 @@ import manager.HistoryManager;
 import manager.InMemoryHistoryManager;
 import model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static enums.Status.IN_PROGRESS;
-import static enums.Status.NEW;
 
 public class InMemoryHistoryManagerTest {
 
@@ -19,7 +15,7 @@ public class InMemoryHistoryManagerTest {
     private Task task1;
 
     @BeforeEach
-    public void BeforeEach() {
+    public void beforeEach() {
         historyManager = new InMemoryHistoryManager();
         task1 = new Task("Задача 1", "описание");
         task1.setId(1);
