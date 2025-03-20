@@ -31,7 +31,26 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        if(history.containsKey(id)){
+        Node nodeToRemove = history.get(id);
+        if (nodeToRemove != null) {
+            if (nodeToRemove.prev == null) {
+                head = nodeToRemove.next;
+                if (head != null) {
+                    head.prev = null;
+                }
+            } else {
+                nodeToRemove.prev.next = nodeToRemove.next;
+            }
+
+            if (nodeToRemove.next == null) {
+                tail = nodeToRemove.prev;
+                if (tail != null) {
+                    tail.next = null;
+                }
+            } else {
+                nodeToRemove.next.prev = nodeToRemove.prev;
+            }
+
             history.remove(id);
         }
     }
