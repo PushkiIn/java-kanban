@@ -11,7 +11,7 @@ import java.util.Map;
 public class InMemoryHistoryManager implements HistoryManager {
     Node head;
     Node tail;
-    private Map<Integer, Node> history;
+    private final Map<Integer, Node> history;
 
 
     public InMemoryHistoryManager() {
@@ -20,7 +20,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        if(task == null){
+        if (task == null) {
             return;
         }
 
@@ -57,7 +57,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        List<Task> historyList= new ArrayList<>();
+        List<Task> historyList = new ArrayList<>();
         Node current = head;
         while (current != null) {
             historyList.add(current.task);
@@ -68,7 +68,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private Node linkLast(Task task) {
         Node newNode = new Node(task);
-        if(tail == null) {
+        if (tail == null) {
             head = newNode;
         } else {
             newNode.prev = tail;
