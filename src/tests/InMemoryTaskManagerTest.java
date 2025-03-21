@@ -17,7 +17,7 @@ public class InMemoryTaskManagerTest {
     private InMemoryTaskManager taskManager;
 
     @BeforeEach
-    public void BeforeEach() {
+    public void beforeEach() {
         taskManager = new InMemoryTaskManager();
     }
 
