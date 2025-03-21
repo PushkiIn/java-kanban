@@ -1,4 +1,4 @@
-package tests;
+package test;
 
 import model.SubTask;
 import org.junit.jupiter.api.Assertions;
