@@ -10,7 +10,7 @@ public class Task {
     private String description;
     private Status status;
     private int id = 0;
-    private TaskType type = TaskType.TASK;;
+    private TaskType type = TaskType.TASK;
 
     public Task(String name, String description) {
         this.name = name;
