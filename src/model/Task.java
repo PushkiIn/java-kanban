@@ -1,6 +1,7 @@
 package model;
 
 import enums.Status;
+import enums.TaskType;
 
 import java.util.Objects;
 
@@ -9,6 +10,7 @@ public class Task {
     private String description;
     private Status status;
     private int id = 0;
+    private TaskType type = TaskType.TASK;;
 
     public Task(String name, String description) {
         this.name = name;
@@ -19,6 +21,13 @@ public class Task {
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
+        this.status = status;
+    }
+
+    public Task(int id, String name, String description, Status status) {
+        this.id = id;
+        this.description = description;
+        this.name = name;
         this.status = status;
     }
 
@@ -46,6 +55,10 @@ public class Task {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public TaskType getType() {
+        return this.type;
     }
 
     public String getDescription() {
