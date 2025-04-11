@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, Epic> epics;
-    private final HashMap<Integer, SubTask> subTasks;
+    protected final HashMap<Integer, Task> tasks;
+    protected final HashMap<Integer, Epic> epics;
+    protected final HashMap<Integer, SubTask> subTasks;
     private int counterId;
     private final HistoryManager historyManager;
 
@@ -25,7 +25,7 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager = Managers.getDefaultHistory();
     }
 
-    private int generateId() {
+   private int generateId() {
         return ++counterId;
     }
 
