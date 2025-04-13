@@ -18,7 +18,7 @@ public class Epic extends Task {
     }
 
     public TaskType getType() {
-        return this.type;
+        return TaskType.EPIC;
     }
 
     public ArrayList<Integer> getSubTaskIds() {
@@ -41,10 +41,5 @@ public class Epic extends Task {
 
     public void removeAllSubTasks() {
         subTaskIds.clear();
-    }
-
-    @Override
-    public String toString() {
-        return "model.Epic{id=" + getId() + ", name='" + getName() + '\'' + ", description='" + getDescription() + '\'' + ", status=" + getStatus() + ", subTaskIds=" + subTaskIds + '}';
     }
 }
