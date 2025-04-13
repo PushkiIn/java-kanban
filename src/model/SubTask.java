@@ -36,6 +36,13 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "model.SubTask{id=" + getId() + ", name='" + getName() + '\'' + ", description='" + getDescription() + '\'' + ", status=" + getStatus() + ", epicId=" + epicId + '}';
+        return String.format("%d,%s,%s,%s,%s,%d",
+                this.getId(),
+                this.getType(),
+                this.getName(),
+                this.getStatus(),
+                this.getDescription(),
+                this.getEpicId()
+        );
     }
 }

@@ -87,6 +87,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return "model.Task{id=" + id + ", name='" + name + '\'' + ", description='" + description + '\'' + ", status=" + status + '}';
+        return String.format("%d,%s,%s,%s,%s",
+                this.getId(),
+                this.getType(),
+                this.getName(),
+                this.getStatus(),
+                this.getDescription()
+        );
     }
 }
