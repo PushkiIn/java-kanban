@@ -1,5 +1,6 @@
 package util;
 
+import manager.FileBackedTaskManager;
 import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import manager.TaskManager;
@@ -10,7 +11,7 @@ public class Managers {
     }
 
     public static TaskManager getDefault() {
-        return new InMemoryTaskManager();
+        return new FileBackedTaskManager();
     }
 
     public static InMemoryHistoryManager getDefaultHistory() {
