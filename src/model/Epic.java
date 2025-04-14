@@ -17,6 +17,7 @@ public class Epic extends Task {
         super(id, name, description, status);
     }
 
+    @Override
     public TaskType getType() {
         return TaskType.EPIC;
     }
