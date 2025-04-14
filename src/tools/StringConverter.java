@@ -27,4 +27,26 @@ public class StringConverter {
                 throw new IllegalArgumentException("Unknown task type: " + type);
         }
     }
+
+    public static String toString(Task task) {
+        if(task instanceof SubTask) {
+            SubTask subtask = (SubTask) task;
+            return String.format("%d,%s,%s,%s,%s,%d",
+                subtask.getId(),
+                subtask.getType(),
+                subtask.getName(),
+                subtask.getStatus(),
+                subtask.getDescription(),
+                subtask.getEpicId()
+            );
+        } else {
+            return String.format("%d,%s,%s,%s,%s",
+                task.getId(),
+                task.getType(),
+                task.getName(),
+                task.getStatus(),
+                task.getDescription()
+            );
+        }
+    }
 }
