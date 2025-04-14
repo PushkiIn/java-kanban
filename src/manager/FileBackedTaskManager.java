@@ -123,15 +123,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             writer.write(firstString);
 
             for (Task task : super.getAllTasks()) {
-                writer.write(task.toString() + "\n");
+                writer.write(StringConverter.toString(task) + "\n");
             }
 
             for (Epic epic : super.getAllEpics()) {
-                writer.write(epic.toString() + "\n");
+                writer.write(StringConverter.toString(epic) + "\n");
             }
 
             for (SubTask subTask : super.getAllSubTasks()) {
-                writer.write(subTask.toString() + "\n");
+                writer.write(StringConverter.toString(subTask) + "\n");
             }
 
         } catch (IOException e) {
