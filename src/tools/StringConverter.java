@@ -29,7 +29,7 @@ public class StringConverter {
     }
 
     public static String toString(Task task) {
-        if(task instanceof SubTask) {
+        if (task instanceof SubTask) {
             SubTask subtask = (SubTask) task;
             return String.format("%d,%s,%s,%s,%s,%d",
                 subtask.getId(),
