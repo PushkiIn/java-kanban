@@ -20,10 +20,11 @@ public class Epic extends Task {
         super(id, name, description, status);
     }
 
-    public Epic(int id, String name, String description, Status status, Duration duration, LocalDateTime startTime ) {
+    public Epic(int id, String name, String description, Status status, Duration duration, LocalDateTime startTime) {
         super(id, name, description, status, duration, startTime);
         this.endTime = startTime.plus(duration);
     }
+
     @Override
     public TaskType getType() {
         return TaskType.EPIC;
