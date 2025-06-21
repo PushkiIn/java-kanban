@@ -6,7 +6,6 @@ import manager.TaskManager;
 
 public class Managers {
     private Managers() {
-
     }
 
     public static TaskManager getDefault() {
