@@ -48,6 +48,10 @@ public class InMemoryTaskManager implements TaskManager {
             subTasks.put(subTask.getId(), subTask);
             epics.get(subTask.getEpicId()).addSubTaskId(subTask.getId());
             updateEpicStatus((epics.get(subTask.getEpicId())));
+            updateEpicTime((epics.get(subTask.getEpicId())));
+            if (subTask.getStartTime() != null) {
+                prioritizedTasks.add(subTask);
+            }
         }
     }
 
@@ -114,6 +118,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epic : epics.values()) {
             epic.removeAllSubTasks();
             updateEpicStatus(epic);
+            updateEpicTime(epic);
         }
     }
 
@@ -155,18 +160,15 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (subTasks.containsKey(updatedTask.getId())) {
             subTasks.put(updatedTask.getId(), (SubTask) updatedTask);
             updateEpicStatus(epics.get(((SubTask) updatedTask).getEpicId()));
+            updateEpicTime(epics.get(((SubTask) updatedTask).getEpicId()));
         }
     }
 
     @Override
-    public ArrayList<SubTask> getSubTasksOfEpic(int epicId) {
-        ArrayList<SubTask> subTasksByEpic = new ArrayList<>();
-        for (SubTask subTask : subTasks.values()) {
-            if (subTask.getEpicId() == epicId) {
-                subTasksByEpic.add(subTask);
-            }
-        }
-        return subTasksByEpic;
+    public List<SubTask> getEpicSubtasks(int epicId) {
+        List<SubTask> subTasksByEpic = new ArrayList<>();
+
+        return subTasks.values().stream().filter(subTask -> subTask.getEpicId() == epicId).collect(Collectors.toList());
     }
 
     @Override
@@ -203,6 +205,22 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 epic.setStatus(Status.IN_PROGRESS);
             }
+        }
+    }
+
+    @Override
+    public void updateEpicTime(Epic epic) {
+        List<SubTask> subTasksOfEpic = getEpicSubtasks(epic.getId());
+
+        Optional<LocalDateTime> minStart = subTasksOfEpic.stream().map(SubTask::getStartTime).filter(Objects::nonNull).min(LocalDateTime::compareTo);
+        Optional<LocalDateTime> maxEnd = subTasksOfEpic.stream().map(SubTask::getStartTime).filter(Objects::nonNull).max(LocalDateTime::compareTo);
+
+        if (minStart.isPresent() && maxEnd.isPresent()) {
+            epic.setStartTime(minStart.get());
+            epic.setDuration(Duration.between(minStart.get(), maxEnd.get()));
+        } else {
+            epic.setStartTime(null);
+            epic.setDuration(Duration.ZERO);
         }
     }
 
