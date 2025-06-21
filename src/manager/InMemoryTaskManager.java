@@ -23,11 +23,10 @@ public class InMemoryTaskManager implements TaskManager {
         tasks = new HashMap<>();
         epics = new HashMap<>();
         subTasks = new HashMap<>();
-        counterId = 0;
         historyManager = Managers.getDefaultHistory();
     }
 
-   private int generateId() {
+    private int generateId() {
         return ++counterId;
     }
 
@@ -95,18 +94,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
-        for (Task task: tasks.values()) {
-            historyManager.remove(task.getId());
-        }
+        tasks.values().stream().forEach(task -> historyManager.remove(task.getId()));
         tasks.clear();
     }
 
     @Override
     public void deleteAllEpics() {
-        for (Epic epic: epics.values()) {
+        for (Epic epic : epics.values()) {
             historyManager.remove(epic.getId());
         }
-        for (SubTask subTask: subTasks.values()) {
+        for (SubTask subTask : subTasks.values()) {
             historyManager.remove(subTask.getId());
         }
         tasks.clear();
@@ -116,7 +113,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllSubTasks() {
-        for (SubTask subTask: subTasks.values()) {
+        for (SubTask subTask : subTasks.values()) {
             historyManager.remove(subTask.getId());
         }
         subTasks.clear();
