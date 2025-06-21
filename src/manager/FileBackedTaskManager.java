@@ -13,6 +13,7 @@ import java.io.IOException;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
+
     @Override
     public void createTask(Task task) {
         super.createTask(task);
@@ -117,7 +118,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     public void save() {
         String fileName = "tasks.csv";
-        String firstString = "id,type,name,status,description,epic\n";
+        String firstString = "id,type,name,status,description,duration,startTime,epic\n";
 
         try (FileWriter writer = new FileWriter(fileName)) {
             writer.write(firstString);
