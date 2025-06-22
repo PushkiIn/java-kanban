@@ -18,7 +18,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     protected T taskManager;
 
     protected Task createTask() {
-        Task task = new Task("Task1", "Description", Status.NEW, LocalDateTime.now().plusHours(1), Duration.ofHours(1));
+        Task task = new Task("Task1", "Description");
+        return task;
+    }
+
+    protected Task createTaskWithStartTimeAndDuration(LocalDateTime time, Duration duration) {
+        Task task = new Task("Task1", "Description", Status.NEW, time, duration);
         return task;
     }
 
@@ -149,28 +154,90 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void testTimeConflict_NoConflict() {
-        Task task1 = createTask();
+    void shouldAddTaskBeforeExisting() {
+        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
         taskManager.createTask(task1);
 
         Task task2 = createTask();
-        task2.setStartTime(task1.getStartTime().plusHours(2));  // после task1
+        task2.setStartTime(task1.getStartTime().minusHours(2));
         task2.setDuration(Duration.ofHours(1));
         boolean conflict = invokeHasTimeConflict(task2);
         assertFalse(conflict);
     }
 
     @Test
-    void testTimeConflict_Conflict() {
-        Task task1 = createTask();
+    void shouldAddTaskAfterExisting() {
+        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
         taskManager.createTask(task1);
 
         Task task2 = createTask();
-        task2.setStartTime(task1.getStartTime().plusMinutes(30));  // пересекается с task1
+        task2.setStartTime(task1.getStartTime().plusHours(2));
+        task2.setDuration(Duration.ofMinutes(30));
+        boolean conflict = invokeHasTimeConflict(task2);
+        assertFalse(conflict);
+    }
+
+    @Test
+    void shouldFailWhenNewTaskStartsDuringExisting() {
+        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        taskManager.createTask(task1);
+
+        Task task2 = createTask();
+        task2.setStartTime(task1.getStartTime().plusMinutes(30));
         task2.setDuration(Duration.ofHours(1));
         boolean conflict = invokeHasTimeConflict(task2);
         assertTrue(conflict);
     }
+
+    @Test
+    void shouldFailWhenNewTaskEndsDuringExisting() {
+        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        taskManager.createTask(task1);
+
+        Task task2 = createTask();
+        task2.setStartTime(task1.getStartTime().minusMinutes(30));
+        task2.setDuration(Duration.ofHours(1));
+        boolean conflict = invokeHasTimeConflict(task2);
+        assertTrue(conflict);
+    }
+
+    @Test
+    void shouldFailWhenNewTaskInsideExisting() {
+        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        taskManager.createTask(task1);
+
+        Task task2 = createTask();
+        task2.setStartTime(task1.getStartTime().plusMinutes(30));
+        task2.setDuration(Duration.ofMinutes(15));
+        boolean conflict = invokeHasTimeConflict(task2);
+        assertTrue(conflict);
+    }
+
+    @Test
+    void shouldFailWhenExistingInsideNewTask() {
+        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        taskManager.createTask(task1);
+
+        Task task2 = createTask();
+        task2.setStartTime(task1.getStartTime().minusMinutes(30));
+        task2.setDuration(Duration.ofHours(2));
+        boolean conflict = invokeHasTimeConflict(task2);
+        assertTrue(conflict);
+    }
+
+    @Test
+    void shouldFailWhenStartAndEndAreEqual() {
+        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        taskManager.createTask(task1);
+
+        Task task2 = createTask();
+        task2.setStartTime(task1.getStartTime());
+        task2.setDuration(Duration.ofHours(1));
+        boolean conflict = invokeHasTimeConflict(task2);
+        assertTrue(conflict);
+    }
+
+
 
     protected boolean invokeHasTimeConflict(Task task) {
         try {
