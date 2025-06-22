@@ -11,14 +11,25 @@ import java.time.LocalDateTime;
 
 public class StringConverter {
     public static Task fromString(String value) {
-        String[] fields = value.split(",");
+        String[] fields = value.split(",", -1);
         int id = Integer.parseInt(fields[0]);
         TaskType type = TaskType.valueOf(fields[1]);
         String name = fields[2];
         Status status = Status.valueOf(fields[3]);
         String description = fields[4];
-        Duration duration = Duration.parse(fields[5]);
-        LocalDateTime startTime = LocalDateTime.parse(fields[6]);
+        String durationStr = fields[5];
+        String startTimeStr = fields[6];
+
+        LocalDateTime startTime = null;
+        Duration duration = null;
+
+        if (!startTimeStr.isBlank()) {
+            startTime = LocalDateTime.parse(startTimeStr);
+        }
+
+        if (!durationStr.isBlank()) {
+            duration = Duration.parse(durationStr);
+        }
 
         int epicId = fields.length > 7 ? Integer.parseInt(fields[7]) : 0;
 
