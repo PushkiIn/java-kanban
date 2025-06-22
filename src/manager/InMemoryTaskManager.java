@@ -32,7 +32,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createTask(Task task) {
-        if(task.getDuration() != null &&task.getStartTime() != null && hasTimeConflict(task)) {
+        if (task.getDuration() != null && task.getStartTime() != null && hasTimeConflict(task)) {
             return;
         }
 
@@ -51,7 +51,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubTask(SubTask subTask) {
-        if(subTask.getDuration() != null && subTask.getStartTime() != null && hasTimeConflict(subTask)) {
+        if (subTask.getDuration() != null && subTask.getStartTime() != null && hasTimeConflict(subTask)) {
             return;
         }
 
@@ -253,6 +253,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (minStart.isPresent() && maxEnd.isPresent()) {
             epic.setStartTime(minStart.get());
             epic.setDuration(Duration.between(minStart.get(), maxEnd.get()));
+            epic.setEndTime(maxEnd.get());
         } else {
             epic.setStartTime(null);
             epic.setDuration(Duration.ZERO);
@@ -283,7 +284,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         return getPrioritizedTasks().stream().filter(existing -> existing.getId() != newTask.getId()).filter(existing -> existing.getStartTime() != null && existing.getDuration() != null).anyMatch(existing -> {
             LocalDateTime existingStart = existing.getStartTime();
-            LocalDateTime existingEnd = existingStart.plus(existing.getDuration());
+            LocalDateTime existingEnd = existing.getEndTime();
 
             return !(newEnd.isBefore(existingStart) || newStart.isAfter(existingEnd));
         });
