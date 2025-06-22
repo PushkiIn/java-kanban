@@ -286,7 +286,7 @@ public class InMemoryTaskManager implements TaskManager {
             LocalDateTime existingStart = existing.getStartTime();
             LocalDateTime existingEnd = existing.getEndTime();
 
-            return !(newEnd.isBefore(existingStart) || newStart.isAfter(existingEnd));
+            return !(newEnd.isEqual(existingStart) || newEnd.isBefore(existingStart) || newStart.isEqual(existingEnd) || newStart.isAfter(existingEnd));
         });
     }
 }
