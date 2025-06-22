@@ -32,6 +32,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createTask(Task task) {
+        if(task.getDuration() != null &&task.getStartTime() != null && hasTimeConflict(task)) {
+            return;
+        }
+
         task.setId(generateId());
         tasks.put(task.getId(), task);
         if (task.getStartTime() != null) {
