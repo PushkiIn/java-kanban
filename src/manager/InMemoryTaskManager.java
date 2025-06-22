@@ -51,6 +51,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubTask(SubTask subTask) {
+        if(subTask.getDuration() != null && subTask.getStartTime() != null && hasTimeConflict(subTask)) {
+            return;
+        }
+
         if (epics.containsKey(subTask.getEpicId())) {
             subTask.setId(generateId());
             subTasks.put(subTask.getId(), subTask);
