@@ -15,15 +15,17 @@ public class Epic extends Task {
 
     public Epic(String name, String description) {
         super(name, description);
+        this.subTasksIds = new ArrayList<>();
     }
 
-    public Epic(int id, String name, String description, Status status) {
-        super(id, name, description, status);
+    public Epic(int id, String name, String description) {
+        super(id, name, description);
+        this.subTasksIds = new ArrayList<>();
     }
 
-    public Epic(int id, String name, String description, Status status, Duration duration, LocalDateTime startTime) {
-        super(id, name, description, status, duration, startTime);
-        this.endTime = startTime.plus(duration);
+    public Epic(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration) {
+        super(id, name, description, status, startTime, duration);
+        subTasksIds = new ArrayList<>();
     }
 
     @Override
