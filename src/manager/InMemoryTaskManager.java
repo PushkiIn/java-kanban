@@ -38,12 +38,12 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Ошибка при добавлении задачи: " + e.getMessage());
             return -1;
         }
-
-        task.setId(generateId());
+        int id = generateId();
+        task.setId(id);
         tasks.put(task.getId(), task);
-        if (task.getStartTime() != null) {
-            prioritizedTasks.add(task);
-        }
+        prioritizedTasks.add(task);
+
+        return id;
     }
 
     @Override
@@ -52,6 +52,10 @@ public class InMemoryTaskManager implements TaskManager {
 
         epic.setId(id);
         epics.put(epic.getId(), epic);
+        updateEpicTime(epic);
+        updateEpicStatus(epic);
+
+        return id;
     }
 
     @Override
