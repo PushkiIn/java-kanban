@@ -15,4 +15,11 @@ public class Managers {
     public static InMemoryHistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
+
+    public static Gson getGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
+        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
+        return gsonBuilder.create();
+    }
 }
