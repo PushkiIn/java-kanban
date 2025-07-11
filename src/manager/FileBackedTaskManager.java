@@ -1,7 +1,7 @@
 package manager;
 
 import model.Epic;
-import model.SubTask;
+import model.Subtask;
 import model.Task;
 import tools.StringConverter;
 
@@ -15,21 +15,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
 
     @Override
-    public void createTask(Task task) {
-        super.createTask(task);
+    public int createTask(Task task) {
+        int id = super.createTask(task);
         save();
+
+        return id;
     }
 
     @Override
-    public void createEpic(Epic epic) {
-        super.createEpic(epic);
+    public int createEpic(Epic epic) {
+        int id = super.createEpic(epic);
         save();
+
+        return id;
     }
 
     @Override
-    public void createSubTask(SubTask subTask) {
-        super.createSubTask(subTask);
+    public int createSubTask(Subtask subTask) {
+        int id = super.createSubTask(subTask);
         save();
+
+        return id;
     }
 
     @Override
