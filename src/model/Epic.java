@@ -29,37 +29,63 @@ public class Epic extends Task {
     }
 
     @Override
-    public TaskType getType() {
+    public TaskType getTaskType() {
         return TaskType.EPIC;
-    }
-
-    public ArrayList<Integer> getSubTaskIds() {
-        return subTaskIds;
-    }
-
-    public void addSubTaskId(int subtaskId) {
-        subTaskIds.add(subtaskId);
-    }
-
-    public ArrayList<Integer> getSubtaskIds() {
-        return subTaskIds;
-    }
-
-    public void removeSubTaskId(int subTaskId) {
-        if (subTaskIds.contains(subTaskId)) {
-            subTaskIds.remove(Integer.valueOf(subTaskId));
-        }
-    }
-
-    public void removeAllSubTasks() {
-        subTaskIds.clear();
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
     }
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public List<Integer> getSubTasks() {
+        return subTasksIds;
+    }
+
+    public void addSubTaskById(int subtaskId) {
+        subTasksIds.add(subtaskId);
+    }
+
+    public void removeSubTaskById(int subTaskId) {
+        if (subTasksIds.contains(subTaskId)) {
+            subTasksIds.remove(Integer.valueOf(subTaskId));
+        }
+    }
+
+    public void removeAllSubTasks() {
+        subTasksIds.clear();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Epic epic = (Epic) o;
+
+        if (id != 0) {
+            return id == epic.id;
+        }
+
+        return Objects.equals(name, epic.name)
+                && Objects.equals(description, epic.description)
+                && status == epic.status
+                && Objects.equals(startTime, epic.startTime)
+                && Objects.equals(duration, epic.duration)
+                && Objects.equals(subTasksIds, epic.subTasksIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() + Objects.hash(subTasksIds);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().replace("Task", "Epic").replace("]", "") + String.format(", subTasks=%s]", subTasksIds);
     }
 }
