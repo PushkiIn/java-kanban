@@ -1,45 +1,45 @@
 package manager;
 
 import model.Epic;
-import model.SubTask;
+import model.Subtask;
 import model.Task;
 
 import java.util.List;
 
 public interface TaskManager {
-    void createTask(Task task);
+    int createTask(Task task);
 
-    void createEpic(Epic epic);
+    int createEpic(Epic epic);
 
-    void createSubTask(SubTask subTask);
+    int createSubTask(Subtask subTask);
 
-    List<Task> getAllTasks();
+    List<Task> getTasks();
 
-    List<Epic> getAllEpics();
+    List<Epic> getEpics();
 
-    List<SubTask> getAllSubTasks();
+    List<Subtask> getSubTasks();
 
     Task getTaskById(int id);
 
     Epic getEpicById(int id);
 
-    SubTask getSubTaskById(int id);
+    Subtask getSubTaskById(int id);
 
-    void deleteAllTasks();
+    void deleteTasks();
 
-    void deleteAllEpics();
+    void deleteEpics();
 
-    void deleteAllSubTasks();
+    void deleteSubtasks();
 
-    void deleteTask(int id);
+    void deleteTaskById(int id);
 
-    void deleteEpic(int id);
+    void deleteEpicById(int id);
 
-    void deleteSubTask(int id);
+    void deleteSubTaskById(int id);
 
     void updateTask(Task updatedTask);
 
-    List<SubTask> getEpicSubtasks(int epicId);
+    List<Subtask> getEpicSubTasks(int epicId);
 
     void updateEpicStatus(Epic epic);
 
