@@ -6,23 +6,40 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class StringConverter {
     public static Task fromString(String value) {
-        String[] fields = value.split(",");
+        String[] fields = value.split(",", -1);
         int id = Integer.parseInt(fields[0]);
         TaskType type = TaskType.valueOf(fields[1]);
         String name = fields[2];
         Status status = Status.valueOf(fields[3]);
         String description = fields[4];
-        int epicId = fields.length > 5 ? Integer.parseInt(fields[5]) : 0;
+        String durationStr = fields[5];
+        String startTimeStr = fields[6];
+
+        LocalDateTime startTime = null;
+        Duration duration = null;
+
+        if (!startTimeStr.isBlank()) {
+            startTime = LocalDateTime.parse(startTimeStr);
+        }
+
+        if (!durationStr.isBlank()) {
+            duration = Duration.parse(durationStr);
+        }
+
+        int epicId = fields.length > 7 ? Integer.parseInt(fields[7]) : 0;
 
         switch (type) {
             case TASK:
-                return new Task(id, name, description, status);
+                return new Task(id, name, description, status, duration, startTime);
             case EPIC:
-                return new Epic(id, name, description, status);
+                return new Epic(id, name, description, status, duration, startTime);
             case SUBTASK:
-                return new SubTask(id, name, description, status, epicId);
+                return new SubTask(id, name, description, status, duration, startTime, epicId);
             default:
                 throw new IllegalArgumentException("Unknown task type: " + type);
         }
@@ -30,22 +47,30 @@ public class StringConverter {
 
     public static String toString(Task task) {
         if (task instanceof SubTask) {
-            SubTask subtask = (SubTask) task;
-            return String.format("%d,%s,%s,%s,%s,%d",
-                subtask.getId(),
-                subtask.getType(),
-                subtask.getName(),
-                subtask.getStatus(),
-                subtask.getDescription(),
-                subtask.getEpicId()
+            SubTask subTask = (SubTask) task;
+            String durationStr = (task.getDuration() != null) ? task.getDuration().toString() : "";
+            String startTimeStr = (task.getStartTime() != null) ? task.getStartTime().toString() : "";
+            return String.format("%d,%s,%s,%s,%s,%s,%s,%d",
+                subTask.getId(),
+                subTask.getType(),
+                subTask.getName(),
+                subTask.getStatus(),
+                subTask.getDescription(),
+                durationStr,
+                startTimeStr,
+                subTask.getEpicId()
             );
         } else {
-            return String.format("%d,%s,%s,%s,%s",
+            String durationStr = (task.getDuration() != null) ? task.getDuration().toString() : "";
+            String startTimeStr = (task.getStartTime() != null) ? task.getStartTime().toString() : "";
+            return String.format("%d,%s,%s,%s,%s,%s,%s",
                 task.getId(),
                 task.getType(),
                 task.getName(),
                 task.getStatus(),
-                task.getDescription()
+                task.getDescription(),
+                durationStr,
+                startTimeStr
             );
         }
     }
