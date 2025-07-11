@@ -31,9 +31,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createTask(Task task) {
-        if (task.getDuration() != null && task.getStartTime() != null && hasTimeConflict(task)) {
-            return;
+    public int createTask(Task task) throws InvalidTaskTimingException {
+        try {
+            validateTaskTiming(task);
+        } catch (TaskTimeConflictException e) {
+            System.out.println("Ошибка при добавлении задачи: " + e.getMessage());
+            return -1;
         }
 
         task.setId(generateId());
@@ -44,15 +47,26 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createEpic(Epic epic) {
-        epic.setId(generateId());
+    public int createEpic(Epic epic) {
+        int id = generateId();
+
+        epic.setId(id);
         epics.put(epic.getId(), epic);
     }
 
     @Override
-    public void createSubTask(SubTask subTask) {
-        if (subTask.getDuration() != null && subTask.getStartTime() != null && hasTimeConflict(subTask)) {
-            return;
+    public int createSubTask(Subtask subTask) {
+        try {
+            validateTaskTiming(subTask);
+        } catch (TaskTimeConflictException e) {
+            System.out.println("Ошибка при добавлении задачи: " + e.getMessage());
+            return -1;
+        }
+
+        if (!epics.containsKey(subTask.getEpicId())) {
+            throw new OrphanSubTaskException(
+                    "Подзадача должна быть связана с существующим Epic. Предоставленный epicId:" + subTask.getEpicId()
+            );
         }
 
         if (epics.containsKey(subTask.getEpicId())) {
