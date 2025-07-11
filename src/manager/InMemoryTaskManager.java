@@ -73,15 +73,26 @@ public class InMemoryTaskManager implements TaskManager {
             );
         }
 
-        if (epics.containsKey(subTask.getEpicId())) {
-            subTask.setId(generateId());
-            subTasks.put(subTask.getId(), subTask);
-            epics.get(subTask.getEpicId()).addSubTaskId(subTask.getId());
-            updateEpicStatus((epics.get(subTask.getEpicId())));
-            updateEpicTime((epics.get(subTask.getEpicId())));
-            if (subTask.getStartTime() != null) {
-                prioritizedTasks.add(subTask);
-            }
+        int id = generateId();
+        subTask.setId(id);
+        subTasks.put(id, subTask);
+
+        Epic epic = epics.get(subTask.getEpicId());
+        epic.addSubTaskById(id);
+        updateEpicStatus(epic);
+        updateEpicTime(epic);
+        prioritizedTasks.add(subTask);
+
+        return id;
+    }
+
+    private void validateTaskTiming(Task task) throws InvalidTaskTimingException, TaskTimeConflictException {
+        if (task.getDuration() == null || task.getStartTime() == null) {
+            throw new InvalidTaskTimingException("Необходимо указать время начала и продолжительность.");
+        }
+
+        if (hasTimeConflict(task)) {
+            throw new TaskTimeConflictException("Время задачи конфликтует с существующими задачами.");
         }
     }
 
