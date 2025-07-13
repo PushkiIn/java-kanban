@@ -3,6 +3,7 @@ package server.handlers;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class BaseHttpHandler {
@@ -27,5 +28,10 @@ public class BaseHttpHandler {
     protected void sendServerError(HttpExchange exchange, int rCode) throws IOException {
         exchange.sendResponseHeaders(rCode, 0);
         exchange.close();
+    }
+
+    protected String getBody(HttpExchange exchange) throws IOException {
+        InputStream inputStream = exchange.getRequestBody();
+        return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
     }
 }

@@ -69,9 +69,8 @@ public class SubTasksHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handlePost(HttpExchange exchange, String[] pathParts) throws IOException {
-        if (pathParts.length == 2 && pathParts[1].equals("subtasks")) {
-            InputStream inputStream = exchange.getRequestBody();
-            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        if (pathParts.length == 2) {
+            String body = getBody(exchange);
             Subtask subTask = gson.fromJson(body, Subtask.class);
 
             try {

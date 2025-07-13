@@ -77,9 +77,8 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handlePost(HttpExchange exchange, String[] pathParts) throws IOException {
-        if (pathParts.length == 2 && pathParts[1].equals("epics")) {
-            InputStream inputStream = exchange.getRequestBody();
-            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        if (pathParts.length == 2) {
+            String body = getBody(exchange);
             Epic epic = gson.fromJson(body, Epic.class);
 
             if (epic.getId() == 0) {

@@ -9,8 +9,6 @@ import model.Task;
 import util.Managers;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class TasksHandler extends BaseHttpHandler implements HttpHandler {
@@ -69,9 +67,8 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handlePost(HttpExchange exchange, String[] pathParts) throws IOException, TaskTimeConflictException {
-        if (pathParts.length == 2 && pathParts[1].equals("tasks")) {
-            InputStream inputStream = exchange.getRequestBody();
-            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        if (pathParts.length == 2) {
+            String body = getBody(exchange);
             Task task = gson.fromJson(body, Task.class);
 
             try {
