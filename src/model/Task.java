@@ -134,17 +134,16 @@ public class Task {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Task task = (Task) o;
 
-        if (Objects.equals(id, task.id)) {
-            return true;
-        } else {
+        if (this.id == 0 || task.id == 0) {
             return Objects.equals(name, task.name)
                     && Objects.equals(description, task.description)
                     && status == task.status
                     && Objects.equals(startTime, task.startTime)
                     && Objects.equals(duration, task.duration);
+        } else {
+            return id == task.id;
         }
     }
 

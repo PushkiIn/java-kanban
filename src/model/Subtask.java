@@ -55,27 +55,6 @@ public class Subtask extends Task {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Subtask subTask = (Subtask) o;
-
-        return Objects.equals(id, subTask.id)
-                && Objects.equals(name, subTask.name)
-                && Objects.equals(description, subTask.description)
-                && status == subTask.status
-                && Objects.equals(startTime, subTask.startTime)
-                && Objects.equals(duration, subTask.duration)
-                && Objects.equals(epicId, subTask.epicId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), epicId);
-    }
-
-    @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String formattedStart = (startTime != null) ? startTime.format(formatter) : "null";
