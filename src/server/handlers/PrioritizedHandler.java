@@ -23,7 +23,7 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
         String method = exchange.getRequestMethod();
         String[] pathParts = exchange.getRequestURI().getPath().split("/");
 
-        if (method.equals("GET") && pathParts.length == 2 && pathParts[1].equals("prioritized")) {
+        if (method.equals("GET") && pathParts.length == 2) {
             List<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
             sendText(exchange, gson.toJson(prioritizedTasks), 200);
         } else {

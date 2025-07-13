@@ -9,8 +9,6 @@ import model.Subtask;
 import util.Managers;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
@@ -48,10 +46,10 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handleGet(HttpExchange exchange, String[] pathParts) throws IOException {
-        if (pathParts.length == 2 && pathParts[1].equals("epics")) {
+        if (pathParts.length == 2) {
             List<Epic> epics = manager.getEpics();
             sendText(exchange, gson.toJson(epics), 200);
-        } else if (pathParts.length == 3 && pathParts[1].equals("epics")) {
+        } else if (pathParts.length == 3) {
             try {
                 int id = Integer.parseInt(pathParts[2]);
                 Epic epic = manager.getEpicById(id);
@@ -63,7 +61,7 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
             } catch (NumberFormatException e) {
                 sendNotFound(exchange, 404);
             }
-        } else if (pathParts.length == 4 && pathParts[1].equals("epics") && pathParts[3].equals("subtasks")) {
+        } else if (pathParts.length == 4 && pathParts[3].equals("subtasks")) {
             try {
                 int id = Integer.parseInt(pathParts[2]);
                 List<Subtask> epicSubtasks = manager.getEpicSubTasks(id);
@@ -98,10 +96,10 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handleDelete(HttpExchange exchange, String[] pathParts) throws IOException {
-        if (pathParts.length == 2 && pathParts[1].equals("epics")) {
+        if (pathParts.length == 2) {
             manager.deleteEpics();
             sendText(exchange, "Все эпики удалены", 200);
-        } else if (pathParts.length == 3 && pathParts[1].equals("epics")) {
+        } else if (pathParts.length == 3) {
             try {
                 int id = Integer.parseInt(pathParts[2]);
                 manager.deleteEpicById(id);

@@ -46,10 +46,10 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handleGet(HttpExchange exchange, String[] pathParts) throws IOException {
-        if (pathParts.length == 2 && pathParts[1].equals("tasks")) {
+        if (pathParts.length == 2) {
             List<Task> tasks = manager.getTasks();
             sendText(exchange, gson.toJson(tasks), 200);
-        } else if (pathParts.length == 3 && pathParts[1].equals("tasks")) {
+        } else if (pathParts.length == 3) {
             try {
                 int id = Integer.parseInt(pathParts[2]);
                 Task task = manager.getTaskById(id);
@@ -92,10 +92,10 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handleDelete(HttpExchange exchange, String[] pathParts) throws IOException {
-        if (pathParts.length == 2 && pathParts[1].equals("tasks")) {
+        if (pathParts.length == 2) {
             manager.deleteTasks();
             sendText(exchange, "Все задачи удалены", 200);
-        } else if (pathParts.length == 3 && pathParts[1].equals("tasks")) {
+        } else if (pathParts.length == 3) {
             try {
                 int id = Integer.parseInt(pathParts[2]);
                 manager.deleteTaskById(id);

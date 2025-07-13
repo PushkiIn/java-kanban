@@ -9,8 +9,6 @@ import model.Subtask;
 import util.Managers;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class SubTasksHandler extends BaseHttpHandler implements HttpHandler {
@@ -48,10 +46,10 @@ public class SubTasksHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handleGet(HttpExchange exchange, String[] pathParts) throws IOException {
-        if (pathParts.length == 2 && pathParts[1].equals("subtasks")) {
+        if (pathParts.length == 2) {
             List<Subtask> subtasks = manager.getSubTasks();
             sendText(exchange, gson.toJson(subtasks), 200);
-        } else if (pathParts.length == 3 && pathParts[1].equals("subtasks")) {
+        } else if (pathParts.length == 3) {
             try {
                 int id = Integer.parseInt(pathParts[2]);
                 Subtask subTask = manager.getSubTaskById(id);
@@ -95,10 +93,10 @@ public class SubTasksHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handleDelete(HttpExchange exchange, String[] pathParts) throws IOException {
-        if (pathParts.length == 2 && pathParts[1].equals("subtasks")) {
+        if (pathParts.length == 2) {
             manager.deleteSubtasks();
             sendText(exchange, "Все подзадачи удалены", 200);
-        } else if (pathParts.length == 3 && pathParts[1].equals("subtasks")) {
+        } else if (pathParts.length == 3) {
             try {
                 int id = Integer.parseInt(pathParts[2]);
                 manager.deleteSubTaskById(id);
