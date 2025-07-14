@@ -1,3 +1,4 @@
+import enums.Status;
 import manager.FileBackedTaskManager;
 
 import model.Epic;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -30,13 +33,13 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
             public void save() {
                 try (FileWriter writer = new FileWriter(testFile)) {
                     writer.write("id,type,name,status,description,duration,startTime,epic\n");
-                    for (var task : getAllTasks()) {
+                    for (var task : getTasks()) {
                         writer.write(tools.StringConverter.toString(task) + "\n");
                     }
-                    for (var epic : getAllEpics()) {
+                    for (var epic : getEpics()) {
                         writer.write(tools.StringConverter.toString(epic) + "\n");
                     }
-                    for (var sub : getAllSubTasks()) {
+                    for (var sub : getSubTasks()) {
                         writer.write(tools.StringConverter.toString(sub) + "\n");
                     }
                 } catch (Exception e) {
@@ -60,15 +63,15 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     void testLoadFromFile() {
-        taskManager.createTask(createTask());
+        taskManager.createTask(createTask(LocalDateTime.now(), Duration.ofMinutes(15)));
         taskManager.createEpic(createEpic());
-        Epic epic = taskManager.getAllEpics().get(0);
-        taskManager.createSubTask(createSubTask(epic.getId()));
+        Epic epic = taskManager.getEpics().get(0);
+        taskManager.createSubTask(createSubtask(epic.getId(), Status.NEW, LocalDateTime.now().plusHours(1), Duration.ofMinutes(15)));
 
         FileBackedTaskManager loadedManager = new FileBackedTaskManager().loadFromFile(testFile);
 
-        assertEquals(taskManager.getAllTasks().size(), loadedManager.getAllTasks().size());
-        assertEquals(taskManager.getAllEpics().size(), loadedManager.getAllEpics().size());
-        assertEquals(taskManager.getAllSubTasks().size(), loadedManager.getAllSubTasks().size());
+        assertEquals(taskManager.getTasks().size(), loadedManager.getTasks().size());
+        assertEquals(taskManager.getEpics().size(), loadedManager.getEpics().size());
+        assertEquals(taskManager.getSubTasks().size(), loadedManager.getSubTasks().size());
     }
 }

@@ -1,7 +1,7 @@
 import enums.Status;
 import manager.TaskManager;
 import model.Epic;
-import model.SubTask;
+import model.Subtask;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,12 +17,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     protected T taskManager;
 
-    protected Task createTask() {
-        Task task = new Task("Task1", "Description");
-        return task;
-    }
-
-    protected Task createTaskWithStartTimeAndDuration(LocalDateTime time, Duration duration) {
+    protected Task createTask(LocalDateTime time, Duration duration) {
         Task task = new Task("Task1", "Description", Status.NEW, time, duration);
         return task;
     }
@@ -31,14 +26,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         return new Epic("Epic1", "Epic Description");
     }
 
-    protected SubTask createSubTask(int epicId) {
-        SubTask subTask = new SubTask("SubTask1", "SubDesc", Status.NEW, LocalDateTime.now().plusHours(1), Duration.ofHours(1), epicId);
-        return subTask;
+    protected Subtask createSubtask(int epicId) {
+        Subtask subtask = new Subtask("SubTask1", "SubDesc", Status.NEW, LocalDateTime.now().plusHours(1), Duration.ofHours(1), epicId);
+        return subtask;
     }
 
-    protected SubTask createSubTask(int epicId, Status status, LocalDateTime startTime, Duration duration) {
-        SubTask subTask = new SubTask("SubTask1", "SubDesc", status, startTime, duration, epicId);
-        return subTask;
+    protected Subtask createSubtask(int epicId, Status status, LocalDateTime startTime, Duration duration) {
+        Subtask subtask = new Subtask("SubTask1", "SubDesc", status, startTime, duration, epicId);
+        return subtask;
     }
 
     @BeforeEach
@@ -50,24 +45,24 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testCreateAndGetTask() {
-        Task task = createTask();
+        Task task = createTask(LocalDateTime.now(), Duration.ofMinutes(30));
         taskManager.createTask(task);
-        assertEquals(1, taskManager.getAllTasks().size());
+        assertEquals(1, taskManager.getTasks().size());
         assertEquals(task, taskManager.getTaskById(task.getId()));
     }
 
     @Test
     public void testDeleteTask() {
-        Task task = createTask();
+        Task task = createTask(LocalDateTime.now(), Duration.ofMinutes(15));
         taskManager.createTask(task);
-        taskManager.deleteTask(task.getId());
-        assertEquals(0, taskManager.getAllTasks().size());
+        taskManager.deleteTaskById(task.getId());
+        assertEquals(0, taskManager.getTasks().size());
         assertNull(taskManager.getTaskById(1));
     }
 
     @Test
     public void testUpdateTask() {
-        Task task = createTask();
+        Task task = createTask(LocalDateTime.now(), Duration.ofMinutes(15));
         taskManager.createTask(task);
         task.setName("Измененная задача");
         taskManager.updateTask(task);
@@ -80,7 +75,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         taskManager.createEpic(epic);
 
-        SubTask subTask = createSubTask(epic.getId());
+        Subtask subTask = createSubtask(epic.getId());
         taskManager.createSubTask(subTask);
 
         assertEquals(subTask, taskManager.getSubTaskById(subTask.getId()));
@@ -90,7 +85,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     public void testCreateAndGetEpic() {
         Epic epic = createEpic();
         taskManager.createEpic(epic);
-        assertEquals(1, taskManager.getAllEpics().size());
+        assertEquals(1, taskManager.getEpics().size());
         assertEquals(epic, taskManager.getEpicById(epic.getId()));
     }
 
@@ -99,8 +94,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         taskManager.createEpic(epic);
 
-        SubTask st1 = createSubTask(epic.getId(), Status.NEW, LocalDateTime.now(), Duration.ofHours(1));
-        SubTask st2 = createSubTask(epic.getId(), Status.NEW, LocalDateTime.now().plusHours(2), Duration.ofHours(2));
+        Subtask st1 = createSubtask(epic.getId(), Status.NEW, LocalDateTime.now(), Duration.ofHours(1));
+        Subtask st2 = createSubtask(epic.getId(), Status.NEW, LocalDateTime.now().plusHours(2), Duration.ofHours(2));
         taskManager.createSubTask(st1);
         taskManager.createSubTask(st2);
 
@@ -114,8 +109,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         taskManager.createEpic(epic);
 
-        SubTask st1 = createSubTask(epic.getId(), Status.DONE, LocalDateTime.now(), Duration.ofHours(1));
-        SubTask st2 = createSubTask(epic.getId(), Status.DONE, LocalDateTime.now().plusHours(2), Duration.ofHours(2));
+        Subtask st1 = createSubtask(epic.getId(), Status.DONE, LocalDateTime.now(), Duration.ofHours(1));
+        Subtask st2 = createSubtask(epic.getId(), Status.DONE, LocalDateTime.now().plusHours(2), Duration.ofHours(2));
         taskManager.createSubTask(st1);
         taskManager.createSubTask(st2);
 
@@ -129,8 +124,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         taskManager.createEpic(epic);
 
-        SubTask st1 = createSubTask(epic.getId(), Status.NEW, LocalDateTime.now(), Duration.ofHours(1));
-        SubTask st2 = createSubTask(epic.getId(), Status.DONE, LocalDateTime.now().plusHours(2), Duration.ofHours(2));
+        Subtask st1 = createSubtask(epic.getId(), Status.NEW, LocalDateTime.now(), Duration.ofHours(1));
+        Subtask st2 = createSubtask(epic.getId(), Status.DONE, LocalDateTime.now().plusHours(2), Duration.ofHours(2));
         taskManager.createSubTask(st1);
         taskManager.createSubTask(st2);
 
@@ -144,7 +139,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         taskManager.createEpic(epic);
 
-        SubTask st1 = createSubTask(epic.getId());
+        Subtask st1 = createSubtask(epic.getId());
         st1.setStatus(Status.IN_PROGRESS);
         taskManager.createSubTask(st1);
 
@@ -155,88 +150,73 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldAddTaskBeforeExisting() {
-        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofHours(1));
         taskManager.createTask(task1);
 
-        Task task2 = createTask();
-        task2.setStartTime(task1.getStartTime().minusHours(2));
-        task2.setDuration(Duration.ofHours(1));
+        Task task2 = createTask(task1.getStartTime().minusHours(2), Duration.ofHours(1));
         boolean conflict = invokeHasTimeConflict(task2);
         assertFalse(conflict);
     }
 
     @Test
     void shouldAddTaskAfterExisting() {
-        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofHours(1));
         taskManager.createTask(task1);
 
-        Task task2 = createTask();
-        task2.setStartTime(task1.getStartTime().plusHours(2));
-        task2.setDuration(Duration.ofMinutes(30));
+        Task task2 = createTask(task1.getStartTime().plusHours(2), Duration.ofMinutes(30));
         boolean conflict = invokeHasTimeConflict(task2);
         assertFalse(conflict);
     }
 
     @Test
     void shouldFailWhenNewTaskStartsDuringExisting() {
-        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofHours(1));
         taskManager.createTask(task1);
 
-        Task task2 = createTask();
-        task2.setStartTime(task1.getStartTime().plusMinutes(30));
-        task2.setDuration(Duration.ofHours(1));
+        Task task2 = createTask(task1.getStartTime().plusMinutes(30), Duration.ofHours(1));
         boolean conflict = invokeHasTimeConflict(task2);
         assertTrue(conflict);
     }
 
     @Test
     void shouldFailWhenNewTaskEndsDuringExisting() {
-        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofHours(1));
         taskManager.createTask(task1);
 
-        Task task2 = createTask();
-        task2.setStartTime(task1.getStartTime().minusMinutes(30));
-        task2.setDuration(Duration.ofHours(1));
+        Task task2 = createTask(task1.getStartTime().minusMinutes(30), Duration.ofHours(1));
         boolean conflict = invokeHasTimeConflict(task2);
         assertTrue(conflict);
     }
 
     @Test
     void shouldFailWhenNewTaskInsideExisting() {
-        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofHours(1));
         taskManager.createTask(task1);
 
-        Task task2 = createTask();
-        task2.setStartTime(task1.getStartTime().plusMinutes(30));
-        task2.setDuration(Duration.ofMinutes(15));
+        Task task2 = createTask(task1.getStartTime().plusMinutes(30), Duration.ofMinutes(15));
         boolean conflict = invokeHasTimeConflict(task2);
         assertTrue(conflict);
     }
 
     @Test
     void shouldFailWhenExistingInsideNewTask() {
-        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofHours(1));
         taskManager.createTask(task1);
 
-        Task task2 = createTask();
-        task2.setStartTime(task1.getStartTime().minusMinutes(30));
-        task2.setDuration(Duration.ofHours(2));
+        Task task2 = createTask(task1.getStartTime().minusMinutes(30), Duration.ofHours(2));
         boolean conflict = invokeHasTimeConflict(task2);
         assertTrue(conflict);
     }
 
     @Test
     void shouldFailWhenStartAndEndAreEqual() {
-        Task task1 = createTaskWithStartTimeAndDuration(LocalDateTime.now(), Duration.ofHours(1));
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofHours(1));
         taskManager.createTask(task1);
 
-        Task task2 = createTask();
-        task2.setStartTime(task1.getStartTime());
-        task2.setDuration(Duration.ofHours(1));
+        Task task2 = createTask(task1.getStartTime(), Duration.ofHours(1));
         boolean conflict = invokeHasTimeConflict(task2);
         assertTrue(conflict);
     }
-
 
 
     protected boolean invokeHasTimeConflict(Task task) {
@@ -251,13 +231,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testGetAllTasks() {
-        Task task1 = createTask();
-        Task task2 = createTask();
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofMinutes(30));
+        Task task2 = createTask(LocalDateTime.now().plusHours(1), Duration.ofHours(30));
         task2.setName("Task2");
         taskManager.createTask(task1);
         taskManager.createTask(task2);
 
-        List<Task> tasks = taskManager.getAllTasks();
+        List<Task> tasks = taskManager.getTasks();
         assertTrue(tasks.contains(task1));
         assertTrue(tasks.contains(task2));
         assertEquals(2, tasks.size());
@@ -272,7 +252,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
 
-        List<Epic> epics = taskManager.getAllEpics();
+        List<Epic> epics = taskManager.getEpics();
         assertTrue(epics.contains(epic1));
         assertTrue(epics.contains(epic2));
         assertEquals(2, epics.size());
@@ -283,26 +263,26 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         taskManager.createEpic(epic);
 
-        SubTask subTask1 = createSubTask(epic.getId(), Status.NEW, LocalDateTime.now(), Duration.ofHours(1));
-        SubTask subTask2 = createSubTask(epic.getId(), Status.NEW, LocalDateTime.now().plusHours(3), Duration.ofHours(2));
-        taskManager.createSubTask(subTask1);
-        taskManager.createSubTask(subTask2);
+        Subtask subtask1 = createSubtask(epic.getId(), Status.NEW, LocalDateTime.now(), Duration.ofHours(1));
+        Subtask subtask2 = createSubtask(epic.getId(), Status.NEW, LocalDateTime.now().plusHours(3), Duration.ofHours(2));
+        taskManager.createSubTask(subtask1);
+        taskManager.createSubTask(subtask2);
 
-        List<SubTask> subTasks = taskManager.getAllSubTasks();
-        assertTrue(subTasks.contains(subTask1));
-        assertTrue(subTasks.contains(subTask2));
-        assertEquals(2, subTasks.size());
+        List<Subtask> subtasks = taskManager.getSubTasks();
+        assertTrue(subtasks.contains(subtask1));
+        assertTrue(subtasks.contains(subtask2));
+        assertEquals(2, subtasks.size());
     }
 
     @Test
     void testDeleteAllTasks() {
-        Task task1 = createTask();
-        Task task2 = createTask();
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofMinutes(30));
+        Task task2 = createTask(LocalDateTime.now().plusHours(1), Duration.ofHours(30));
         taskManager.createTask(task1);
         taskManager.createTask(task2);
 
-        taskManager.deleteAllTasks();
-        assertTrue(taskManager.getAllTasks().isEmpty());
+        taskManager.deleteTasks();
+        assertTrue(taskManager.getTasks().isEmpty());
     }
 
     @Test
@@ -312,8 +292,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
 
-        taskManager.deleteAllEpics();
-        assertTrue(taskManager.getAllEpics().isEmpty());
+        taskManager.deleteEpics();
+        assertTrue(taskManager.getEpics().isEmpty());
     }
 
     @Test
@@ -321,20 +301,20 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic = createEpic();
         taskManager.createEpic(epic);
 
-        SubTask subTask1 = createSubTask(epic.getId(), Status.NEW, LocalDateTime.now(), Duration.ofHours(1));
-        SubTask subTask2 = createSubTask(epic.getId(), Status.NEW, LocalDateTime.now().plusHours(3), Duration.ofHours(2));
-        taskManager.createSubTask(subTask1);
-        taskManager.createSubTask(subTask2);
+        Subtask subtask1 = createSubtask(epic.getId(), Status.NEW, LocalDateTime.now(), Duration.ofHours(1));
+        Subtask subtask2 = createSubtask(epic.getId(), Status.NEW, LocalDateTime.now().plusHours(3), Duration.ofHours(2));
+        taskManager.createSubTask(subtask1);
+        taskManager.createSubTask(subtask2);
 
-        taskManager.deleteAllSubTasks();
-        assertTrue(taskManager.getAllSubTasks().isEmpty());
+        taskManager.deleteSubtasks();
+        assertTrue(taskManager.getSubTasks().isEmpty());
     }
 
     @Test
     void testGetHistory() {
-        Task task1 = createTask();
+        Task task1 = createTask(LocalDateTime.now(), Duration.ofMinutes(30));
         task1.setName("Task 1");
-        Task task2 = createTask();
+        Task task2 = createTask(LocalDateTime.now().plusHours(1), Duration.ofHours(30));
         task2.setName("Task 2");
 
         taskManager.createTask(task1);

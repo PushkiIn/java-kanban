@@ -3,7 +3,7 @@ package tools;
 import enums.Status;
 import enums.TaskType;
 import model.Epic;
-import model.SubTask;
+import model.Subtask;
 import model.Task;
 
 import java.time.Duration;
@@ -35,42 +35,42 @@ public class StringConverter {
 
         switch (type) {
             case TASK:
-                return new Task(id, name, description, status, duration, startTime);
+                return new Task(id, name, description, status, startTime, duration);
             case EPIC:
-                return new Epic(id, name, description, status, duration, startTime);
+                return new Epic(id, name, description, status, startTime, duration);
             case SUBTASK:
-                return new SubTask(id, name, description, status, duration, startTime, epicId);
+                return new Subtask(id, name, description, status, startTime, duration, epicId);
             default:
                 throw new IllegalArgumentException("Unknown task type: " + type);
         }
     }
 
     public static String toString(Task task) {
-        if (task instanceof SubTask) {
-            SubTask subTask = (SubTask) task;
+        if (task instanceof Subtask) {
+            Subtask subTask = (Subtask) task;
             String durationStr = (task.getDuration() != null) ? task.getDuration().toString() : "";
             String startTimeStr = (task.getStartTime() != null) ? task.getStartTime().toString() : "";
             return String.format("%d,%s,%s,%s,%s,%s,%s,%d",
-                subTask.getId(),
-                subTask.getType(),
-                subTask.getName(),
-                subTask.getStatus(),
-                subTask.getDescription(),
-                durationStr,
-                startTimeStr,
-                subTask.getEpicId()
+                    subTask.getId(),
+                    subTask.getTaskType(),
+                    subTask.getName(),
+                    subTask.getStatus(),
+                    subTask.getDescription(),
+                    durationStr,
+                    startTimeStr,
+                    subTask.getEpicId()
             );
         } else {
             String durationStr = (task.getDuration() != null) ? task.getDuration().toString() : "";
             String startTimeStr = (task.getStartTime() != null) ? task.getStartTime().toString() : "";
             return String.format("%d,%s,%s,%s,%s,%s,%s",
-                task.getId(),
-                task.getType(),
-                task.getName(),
-                task.getStatus(),
-                task.getDescription(),
-                durationStr,
-                startTimeStr
+                    task.getId(),
+                    task.getTaskType(),
+                    task.getName(),
+                    task.getStatus(),
+                    task.getDescription(),
+                    durationStr,
+                    startTimeStr
             );
         }
     }

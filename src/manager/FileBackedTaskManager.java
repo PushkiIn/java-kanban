@@ -1,7 +1,7 @@
 package manager;
 
 import model.Epic;
-import model.SubTask;
+import model.Subtask;
 import model.Task;
 import tools.StringConverter;
 
@@ -15,56 +15,62 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
 
     @Override
-    public void createTask(Task task) {
-        super.createTask(task);
+    public int createTask(Task task) {
+        int id = super.createTask(task);
+        save();
+
+        return id;
+    }
+
+    @Override
+    public int createEpic(Epic epic) {
+        int id = super.createEpic(epic);
+        save();
+
+        return id;
+    }
+
+    @Override
+    public int createSubTask(Subtask subTask) {
+        int id = super.createSubTask(subTask);
+        save();
+
+        return id;
+    }
+
+    @Override
+    public void deleteTasks() {
+        super.deleteTasks();
         save();
     }
 
     @Override
-    public void createEpic(Epic epic) {
-        super.createEpic(epic);
+    public void deleteEpics() {
+        super.deleteEpics();
         save();
     }
 
     @Override
-    public void createSubTask(SubTask subTask) {
-        super.createSubTask(subTask);
+    public void deleteSubtasks() {
+        super.deleteSubtasks();
         save();
     }
 
     @Override
-    public void deleteAllTasks() {
-        super.deleteAllTasks();
+    public void deleteTaskById(int id) {
+        super.deleteTaskById(id);
         save();
     }
 
     @Override
-    public void deleteAllEpics() {
-        super.deleteAllEpics();
+    public void deleteEpicById(int id) {
+        super.deleteEpicById(id);
         save();
     }
 
     @Override
-    public void deleteAllSubTasks() {
-        super.deleteAllSubTasks();
-        save();
-    }
-
-    @Override
-    public void deleteTask(int id) {
-        super.deleteTask(id);
-        save();
-    }
-
-    @Override
-    public void deleteEpic(int id) {
-        super.deleteEpic(id);
-        save();
-    }
-
-    @Override
-    public void deleteSubTask(int id) {
-        super.deleteSubTask(id);
+    public void deleteSubTaskById(int id) {
+        super.deleteSubTaskById(id);
         save();
     }
 
@@ -94,15 +100,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 if (task.getId() > maxId) maxId = task.getId();
 
                 int id = task.getId();
-                switch (task.getType()) {
+                switch (task.getTaskType()) {
                     case TASK -> manager.tasks.put(id, task);
                     case EPIC -> manager.epics.put(id, (Epic) task);
                     case SUBTASK -> {
-                        SubTask subTask = (SubTask) task;
+                        Subtask subTask = (Subtask) task;
                         manager.subTasks.put(id, subTask);
                         Epic epic = manager.epics.get(subTask.getEpicId());
                         if (epic != null) {
-                            epic.addSubTaskId(id);
+                            epic.addSubTaskById(id);
                         }
                     }
                 }
@@ -123,15 +129,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         try (FileWriter writer = new FileWriter(fileName)) {
             writer.write(firstString);
 
-            for (Task task : super.getAllTasks()) {
+            for (Task task : super.getTasks()) {
                 writer.write(StringConverter.toString(task) + "\n");
             }
 
-            for (Epic epic : super.getAllEpics()) {
+            for (Epic epic : super.getEpics()) {
                 writer.write(StringConverter.toString(epic) + "\n");
             }
 
-            for (SubTask subTask : super.getAllSubTasks()) {
+            for (Subtask subTask : super.getSubTasks()) {
                 writer.write(StringConverter.toString(subTask) + "\n");
             }
 
