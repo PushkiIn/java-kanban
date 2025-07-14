@@ -49,6 +49,7 @@ public class Task {
         this.status = Status.NEW;
         this.startTime = startTime;
         this.duration = duration;
+        this.id = 0;
     }
 
     public Task(String name, String description, Status status, LocalDateTime startTime, Duration duration) {
@@ -57,6 +58,7 @@ public class Task {
         this.status = status;
         this.startTime = startTime;
         this.duration = duration;
+        this.id = 0;
     }
 
     public Task(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration) {
@@ -135,13 +137,8 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-
         if (this.id == 0 || task.id == 0) {
-            return Objects.equals(name, task.name)
-                    && Objects.equals(description, task.description)
-                    && status == task.status
-                    && Objects.equals(startTime, task.startTime)
-                    && Objects.equals(duration, task.duration);
+            return Objects.equals(this.name, task.name) && Objects.equals(this.description, task.description);
         } else {
             return id == task.id;
         }
@@ -149,7 +146,7 @@ public class Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, this.getTaskType(), name, description, status, duration, startTime);
+        return Objects.hash(id, name, description);
     }
 
     @Override
